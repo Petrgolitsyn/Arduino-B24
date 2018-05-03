@@ -20,7 +20,7 @@ int gear_light_status = 0;
 int form_light_status = 0;
 int startup_seq = 0;
 unsigned long previousMillis = 0;
-const long interval = 1000;
+const long interval = 1500;
 
 void setup(){
   irrecv.enableIRIn();
