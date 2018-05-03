@@ -19,7 +19,8 @@ int beacon_light_status = 0;
 int gear_light_status = 0;
 int form_light_status = 0;
 int startup_seq = 0;
-
+unsigned long previousMillis = 0;
+const long interval = 1000;
 
 void setup(){
   irrecv.enableIRIn();
@@ -91,15 +92,25 @@ void loop(){
      pos_light_status = 1; // positioning lights turned on
     };
 
+
+
     if (beacon_light_status == 1) {
-     digitalWrite(beacon_light_red, HIGH);  
+
+      unsigned long currentMillis = millis();
+
+  if (currentMillis - previousMillis >= interval) {
+    // save the last time you blinked the LED
+    previousMillis = currentMillis;
+
+    // set the LED with the beacon_light_red_state of the variable:
+  digitalWrite(beacon_light_red, HIGH);  
      delay(150);                       
      digitalWrite(beacon_light_red, LOW);   
      delay(150);  
      digitalWrite(beacon_light_red, HIGH);   
      delay(150);                      
-     digitalWrite(beacon_light_red, LOW);
-     delay(550);    
+     digitalWrite(beacon_light_red, LOW);  }
+
      beacon_light_status = 1; // beacon lights turned on
    };
     
