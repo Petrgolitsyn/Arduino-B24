@@ -25,7 +25,8 @@ unsigned long second_on = 0;
 unsigned long second_off = 0;
 const long interval = 1500;
 
-void setup(){
+void setup()
+{
   Serial.begin(9600);
   irrecv.enableIRIn();
   irrecv.blink13(true);
@@ -38,8 +39,10 @@ void setup(){
   pinMode(form_light_blue, OUTPUT);
 }
 
-void loop(){
-    if (irrecv.decode(&results)){
+void loop()
+{
+    if (irrecv.decode(&results))
+    {
 
         switch(results.value){
           case 0xFF30CF: //Keypad button "1" change status of position lights
@@ -73,30 +76,30 @@ void loop(){
               }
             
             break;
-           
         };
-
         irrecv.resume();
     };
     
      if (gear_light_status == 1)
-      { if (gl_brightness <= 255) // do incremental brightness increase untill brightness is max
-      do {
-    analogWrite(gear_light, gl_brightness);
-    gl_brightness = gl_brightness + 5; 
-    delay (50);} 
-    while (gl_brightness <= 255);
-    gear_light_status = 1; // gear light turned on
-    };
+      { 
+      if (gl_brightness <= 255) // do incremental brightness increase untill brightness is max
+        do 
+        {
+          analogWrite(gear_light, gl_brightness);
+          gl_brightness = gl_brightness + 5; 
+          delay (50);
+        } 
+        while (gl_brightness <= 255);
+        gear_light_status = 1; // gear light turned on
+      };
     
-    if (pos_light_status == 1) {
+    if (pos_light_status == 1) 
+    {
      analogWrite(pos_light_white, pos_light_white_brightness);
      digitalWrite (pos_light_green, HIGH);
      digitalWrite (pos_light_red, HIGH);
      pos_light_status = 1; // positioning lights turned on
     };
-
-
 
     if (beacon_light_status == 1) 
     {
@@ -123,25 +126,29 @@ void loop(){
       form_light_status=1; // formation lights turned on
     };
 
-    if (pos_light_status == 2){
+    if (pos_light_status == 2)
+    {
       digitalWrite (pos_light_white, LOW);
       digitalWrite (pos_light_red, LOW);
       digitalWrite (pos_light_green, LOW);
       pos_light_status = 0; // position lights turned off
     };
     
-    if (beacon_light_status == 2) {
+    if (beacon_light_status == 2) 
+    {
      digitalWrite(beacon_light_red, LOW);      
      beacon_light_status = 0; // beacon lights turned off
-   };
+    };
 
-    if (gear_light_status == 2) {
+    if (gear_light_status == 2) 
+    {
       analogWrite(gear_light,0);
       gl_brightness =0; // gear lights brightness set 0
       gear_light_status=0; // gear lights turned off
     };
 
-    if (form_light_status == 2) {
+    if (form_light_status == 2) 
+    {
       digitalWrite (form_light_blue, LOW);
       form_light_status = 0; // formation lights turned off
     };
