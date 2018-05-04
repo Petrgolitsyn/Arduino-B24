@@ -19,10 +19,14 @@ int beacon_light_status = 0;
 int gear_light_status = 0;
 int form_light_status = 0;
 int startup_seq = 0;
-unsigned long previousMillis = 0;
+unsigned long first_on = 0;
+unsigned long first_off = 0;
+unsigned long second_on = 0;
+unsigned long second_off = 0;
 const long interval = 1500;
 
 void setup(){
+  Serial.begin(9600);
   irrecv.enableIRIn();
   irrecv.blink13(true);
   pinMode(gear_light, OUTPUT);
@@ -76,7 +80,7 @@ void loop(){
     };
     
      if (gear_light_status == 1)
-    { if (gl_brightness <= 255) // do incremental brightness increase untill brightness is max
+      { if (gl_brightness <= 255) // do incremental brightness increase untill brightness is max
       do {
     analogWrite(gear_light, gl_brightness);
     gl_brightness = gl_brightness + 5; 
@@ -94,27 +98,27 @@ void loop(){
 
 
 
-    if (beacon_light_status == 1) {
+    if (beacon_light_status == 1) 
+    {
+      unsigned long current_time = millis();
 
-      unsigned long currentMillis = millis();
+      if (current_time - first_on >= interval) 
+      {
+      // save the last time you blinked the LED
+        first_on = current_time;
+        first_off = first_on +150;
+        second_on = first_off + 150;
+        second_off = second_on + 150;
 
-  if (currentMillis - previousMillis >= interval) {
-    // save the last time you blinked the LED
-    previousMillis = currentMillis;
-
-    // set the LED with the beacon_light_red_state of the variable:
-  digitalWrite(beacon_light_red, HIGH);  
-     delay(150);                       
-     digitalWrite(beacon_light_red, LOW);   
-     delay(150);  
-     digitalWrite(beacon_light_red, HIGH);   
-     delay(150);                      
-     digitalWrite(beacon_light_red, LOW);  }
-
-     beacon_light_status = 1; // beacon lights turned on
+        digitalWrite(beacon_light_red, HIGH);
+      };
+      if (current_time >= first_off && current_time <= second_on) {digitalWrite(beacon_light_red, LOW);};
+      if (current_time >= second_on && current_time <= second_off) {digitalWrite(beacon_light_red, HIGH);};
+      if (current_time >= second_off) {digitalWrite(beacon_light_red, LOW);} ;
+      beacon_light_status = 1; // beacon lights turned on
    };
     
-    if(form_light_status==1)
+    if (form_light_status==1)
     { digitalWrite (form_light_blue, HIGH);
       form_light_status=1; // formation lights turned on
     };
@@ -135,11 +139,11 @@ void loop(){
       analogWrite(gear_light,0);
       gl_brightness =0; // gear lights brightness set 0
       gear_light_status=0; // gear lights turned off
-    }
+    };
 
     if (form_light_status == 2) {
       digitalWrite (form_light_blue, LOW);
       form_light_status = 0; // formation lights turned off
-    }
+    };
 
 }
