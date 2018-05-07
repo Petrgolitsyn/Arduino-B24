@@ -41,6 +41,7 @@ void setup()
 
 void loop()
 {
+    unsigned long current_time = millis();
     if (irrecv.decode(&results))
     {
 
@@ -103,8 +104,6 @@ void loop()
 
     if (beacon_light_status == 1) 
     {
-      unsigned long current_time = millis();
-
       if (current_time - first_on >= interval) 
       {
       // save the last time you blinked the LED
