@@ -23,6 +23,7 @@ unsigned long first_on = 0;
 unsigned long first_off = 0;
 unsigned long second_on = 0;
 unsigned long second_off = 0;
+unsigned long glow_step = 0;
 const long interval = 1500;
 
 void setup()
@@ -83,14 +84,11 @@ void loop()
     
      if (gear_light_status == 1)
       { 
-      if (gl_brightness <= 255) // do incremental brightness increase untill brightness is max
-        do 
-        {
-          analogWrite(gear_light, gl_brightness);
-          gl_brightness = gl_brightness + 5; 
-          delay (50);
-        } 
-        while (gl_brightness <= 255);
+      if (gl_brightness <= 255 && current_time - glow_step >= 50 ) // do incremental brightness increase untill brightness is max
+      {  
+        analogWrite(gear_light, gl_brightness);
+        gl_brightness = gl_brightness + 5; 
+        glow_step = current_time;
         gear_light_status = 1; // gear light turned on
       };
     
