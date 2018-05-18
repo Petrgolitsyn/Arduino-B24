@@ -24,6 +24,8 @@ unsigned long first_off = 0;
 unsigned long second_on = 0;
 unsigned long second_off = 0;
 unsigned long glow_step = 0;
+unsigned long mode_5_timer = 0;
+unsigned long mode_5_delay_time = 1000;
 const long interval = 1500;
 
 void setup()
@@ -47,26 +49,27 @@ void loop()
       {
 
         switch(results.value){
-          case 0xFF30CF: //Keypad button "1" change status of position lights
+          case 0xFFA25D: //Keypad button "CH-" change status of position lights
             pos_light_status = pos_light_status + 1;
             break;
-          case 0xFF18E7: //Keypad button "2" change status of lights
+          case 0xFF629D: //Keypad button "CH" change status of strobe lights
             beacon_light_status = beacon_light_status + 1;
             break;
-          case 0xFF7A85: //keypad button "3" change status of gears
+          case 0xFFE21D: //keypad button "CH+" change status of gears
             gear_light_status = gear_light_status + 1;
             break;
-          case 0xFF10EF: // keypad button "4" change status of formation lights
+          case 0xFF22DD: // keypad button "PREV" change status of formation lights
             form_light_status = form_light_status + 1;
             break;
-          case 0xFF38C7: // keypad button "5" changes the status of all lights. Needs to be reworked as currently on lights are turned off
+          case 0xFFC23D: // keypad button "PLAY" changes the status of all lights. Needs to be reworked as currently on lights are turned off
             startup_seq = startup_seq + 1; // Change status of startup_seq
             if (startup_seq == 1) 
               {
-                pos_light_status =1;
+                pos_light_status = 1;
                 beacon_light_status = 1;
-                gear_light_status =1;
-                form_light_status =1;
+                gear_light_status = 1;
+                form_light_status = 1;
+                startup_seq =1;
               };
             if (startup_seq==2)
               {
@@ -75,7 +78,7 @@ void loop()
                 gear_light_status = 2;
                 form_light_status = 2;
                 startup_seq =0;
-              }
+              };
             
             break;
         };
