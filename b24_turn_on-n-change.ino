@@ -10,7 +10,7 @@ int pos_light_white = 9; //pwm pin
 int pos_light_white_brightness = 25;
 int beacon_light_red = 8;
 int beacon_light_white = 7; // reserved
-int form_light_blue = 12;
+int form_light_blue = 12; //to be relocated to 3 OR 5
 
 // status of lights: 0 - off. 1 - on, 2 - to be turned off
 int gl_brightness = 0;
@@ -30,9 +30,9 @@ const long interval = 1500;
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(9600); // to be removed on final
   irrecv.enableIRIn();
-  irrecv.blink13(true);
+  irrecv.blink13(true); // to be removed on final
   pinMode(gear_light, OUTPUT);
   pinMode(pos_light_red, OUTPUT);
   pinMode(pos_light_green, OUTPUT);
@@ -87,7 +87,7 @@ void loop()
     
     if (gear_light_status == 1)
       { 
-      if (gl_brightness <= 255 && current_time - glow_step >= 75 ) // do incremental brightness increase untill brightness is max
+      if (gl_brightness <= 128 && current_time - glow_step >= 75 ) // do incremental brightness increase untill brightness is 1/2
       {  
         analogWrite(gear_light, gl_brightness);
         gl_brightness = gl_brightness + 5; 
